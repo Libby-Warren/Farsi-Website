@@ -213,11 +213,11 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;color:var
 @keyframes breathe{from{transform:scale(1,1)}to{transform:scale(1.02,1.08)}}
 /* broomstick squirrels */
 .sqteam{position:absolute;top:var(--y);left:var(--rx);width:180px;height:92px;z-index:3;pointer-events:none;--orx:50px;--ory:22px;
-  animation:sqfly var(--dur) linear var(--d) infinite}
-.sqteam.l{animation-name:sqflyL}
+  --tz:1;animation:sqfly var(--dur) linear var(--d) infinite,sqzig var(--zz,2.2s) linear var(--d) infinite}
+.sqteam.l{animation-name:sqflyL,sqzig;--tz:-1}
 .sqteam:hover,.sqteam:focus-within{animation-play-state:paused}
 .sq{position:absolute;left:52px;top:24px;width:75px;height:43px;padding:0;border:0;background:none;cursor:pointer;outline:none;pointer-events:auto;
-  animation:sqweave 6.5s linear var(--wo) infinite;filter:drop-shadow(0 4px 6px rgba(5,8,30,.45))}
+  animation:sqweave 4s linear var(--wo) infinite;filter:drop-shadow(0 4px 6px rgba(5,8,30,.45))}
 .sq svg{width:100%;height:100%;overflow:visible;display:block}
 .sqteam.l .sq svg{transform:scaleX(-1)}
 .sqteam:hover .sq,.sqteam:focus-within .sq{animation-play-state:paused}
@@ -240,6 +240,13 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;color:var
 .sqleg{transform-box:fill-box;transform-origin:50% 0;animation:sqleg 1.2s ease-in-out infinite alternate}
 @keyframes sqfly{from{left:-200px}to{left:calc(100% + 20px)}}
 @keyframes sqflyL{from{left:calc(100% + 20px)}to{left:-200px}}
+/* zig-zag: sharp up/down legs, banking into each turn */
+@keyframes sqzig{
+  0%{transform:translateY(40px) rotate(calc(var(--tz)*-14deg))}
+  46%{transform:translateY(0) rotate(calc(var(--tz)*-14deg))}
+  50%{transform:translateY(0) rotate(calc(var(--tz)*14deg))}
+  96%{transform:translateY(40px) rotate(calc(var(--tz)*14deg))}
+  100%{transform:translateY(40px) rotate(calc(var(--tz)*-14deg))}}
 @keyframes sqbob{from{transform:translateY(-6px) rotate(-4deg)}to{transform:translateY(6px) rotate(2deg)}}
 @keyframes sqtail{from{transform:rotate(-7deg)}to{transform:rotate(6deg)}}
 @keyframes sqbr{from{transform:skewY(-5deg) scaleX(1)}to{transform:skewY(5deg) scaleX(1.05)}}
@@ -1504,12 +1511,12 @@ const Castle=(()=>{
       d.style.cssText="--x:"+f[1]+";--y:"+f[2]+";--dx:"+f[3]+";--dy:"+f[4]+";--dur:"+f[5]+";--d:-"+i*3+"s;--flap:"+f[6]+";--fd:-"+(i*.17).toFixed(2)+"s";
       d.innerHTML=owl(f[0],"o"+i);stage.appendChild(d)});
     // broomstick squirrels
-    const SQ=[["3%","34s","0s","22%",""],["12%","41s","-19s","68%"," l extra"]];
+    const SQ=[["3%","16s","0s","22%","","2.2s"],["12%","19s","-9s","68%"," l extra","2.6s"]];
     SQ.forEach((q,i)=>{const t=document.createElement("div");t.className="sqteam"+q[4];
-      t.style.cssText="--y:"+q[0]+";--dur:"+q[1]+";--d:"+q[2]+";--rx:"+q[3];
+      t.style.cssText="--y:"+q[0]+";--dur:"+q[1]+";--d:"+q[2]+";--rx:"+q[3]+";--zz:"+q[5];
       for(let k=0;k<3;k++){const b=document.createElement("button");b.type="button";b.className="sq";
         b.setAttribute("aria-label","A ground squirrel on a broomstick. Tap to learn a word.");
-        b.style.cssText="--wo:-"+(k*6.5/3+i*.8).toFixed(2)+"s;--fd:-"+(k*.8+i*1.1).toFixed(2)+"s";
+        b.style.cssText="--wo:-"+(k*4/3+i*.8).toFixed(2)+"s;--fd:-"+(k*.8+i*1.1).toFixed(2)+"s";
         b.innerHTML=squirrel("sq"+i+"_"+k,i);t.appendChild(b)}
       stage.appendChild(t)});
     wishEl=document.createElement("div");wishEl.className="wish";wishEl.hidden=true;wishEl.setAttribute("role","status");
